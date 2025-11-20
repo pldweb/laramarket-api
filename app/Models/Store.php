@@ -27,4 +27,9 @@ class Store extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function storeBallance()
+    {
+        return $this->hasOne(StoreBallance::class);
+    }
 }
