@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helper\ResponseHelper;
 use App\Http\Requests\BuyerStoreRequest;
+use App\Http\Requests\BuyerUpdateRequest;
 use App\Http\Resources\BuyerResource;
 use App\Http\Resources\PaginateResource;
 use App\Http\Resources\UserResource;
@@ -59,7 +60,7 @@ class BuyerController extends Controller
             $buyer = $this->buyerRepository->create($request);
             return ResponseHelper::jsonResponse(true, 'Data buyer berhasil ditambahkan', new BuyerResource($buyer), 200);
 
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return ResponseHelper::jsonResponse(false, $exception->getMessage(), null, 500);
         }
     }
@@ -80,16 +81,37 @@ class BuyerController extends Controller
     }
 
 
-    public function update(Request $request, string $id)
+    public function update(BuyerUpdateRequest $request, string $id)
     {
+        $request = $request->validated();
+        try {
+            $buyer = $this->buyerRepository->getById($id);
+            if (!$buyer) {
+                return ResponseHelper::jsonResponse(false, 'Data buyer gagal ditemukan', null, 404);
+            }
 
+            $buyer = $this->buyerRepository->update($id, $request);
+
+            return ResponseHelper::jsonResponse(true, 'Data buyer berhasil diupdate', new BuyerResource($buyer), 200);
+
+        } catch (\Exception $exception) {
+            return ResponseHelper::jsonResponse(false, $exception->getMessage(), null, 500);
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function delete(string $id)
     {
-        //
+        try {
+            $buyer = $this->buyerRepository->getById($id);
+            if (!$buyer) {
+                return ResponseHelper::jsonResponse(false, 'Data buyer gagal ditemukan', null, 404);
+            }
+
+            $user = $this->buyerRepository->delete($id);
+            return ResponseHelper::jsonResponse(true, 'Data user berhasil dihapus', new UserResource($user), 201);
+
+        }catch (\Exception $exception){
+            return ResponseHelper::jsonResponse(false, $exception->getMessage(), null, 500);
+        }
     }
 }
