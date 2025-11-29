@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use App\Traits\UUID;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
 class ProductCategory extends Model
 {
-    use UUID;
+    use HasUuids;
 
     protected $fillable = [
         'parent_id',
@@ -18,12 +19,17 @@ class ProductCategory extends Model
         'image'
     ];
 
+    public function scopeSearch($query, $search)
+    {
+       return $query->where('name', 'like', '%' . $search . '%');
+    }
+
     public function parent()
     {
         return $this->belongsTo(ProductCategory::class, 'parent_id');
     }
 
-    public function childrens()
+    public function childerns()
     {
         return $this->hasMany(ProductCategory::class, 'parent_id');
     }
