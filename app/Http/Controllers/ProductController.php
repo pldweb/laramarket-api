@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Helper\ResponseHelper;
+use App\Http\Requests\ProductStoreRequest;
+use App\Http\Requests\ProductUpdateRequest;
 use App\Http\Resources\PaginateResource;
 use App\Http\Resources\ProductCategoryResource;
 use App\Http\Resources\ProductResource;
@@ -52,9 +54,17 @@ class ProductController extends Controller
     }
 
 
-    public function store(Request $request)
+    public function store(ProductStoreRequest $request)
     {
-        //
+        $request = $request->validated();
+
+        try {
+            $product = $this->productRepository->create($request);
+            return ResponseHelper::jsonResponse(true, 'Data produk berhasil ditambahkan', new ProductResource($product), 201);
+
+        }catch (\Exception $exception){
+            return ResponseHelper::jsonResponse(false, $exception->getMessage(), null, 500);
+        }
     }
 
     public function show(string $id)
@@ -87,12 +97,23 @@ class ProductController extends Controller
         }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+
+    public function update(ProductUpdateRequest $request, string $id)
     {
-        //
+        $data = $request->validated();
+        try {
+            $product = $this->productRepository->getById($id);
+
+            if (!$product) {
+                return ResponseHelper::jsonResponse(false, 'Data produk gagal ditemukan', null, 404);
+            }
+
+            $product = $this->productRepository->update($id, $data);
+            return ResponseHelper::jsonResponse(true, 'Data produk berhasil diupdate', new ProductResource($product), 200);
+
+        } catch (\Exception $exception) {
+            return ResponseHelper::jsonResponse(false, $exception->getMessage(), null, 500);
+        }
     }
 
     /**
@@ -100,6 +121,17 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $product = $this->productRepository->getById($id);
+            if (!$product) {
+                return ResponseHelper::jsonResponse(false, 'Data produk gagal ditemukan', null, 404);
+            }
+
+            $product = $this->productRepository->delete($id);
+            return ResponseHelper::jsonResponse(true, 'Data produk berhasil dihapus', new ProductResource($product), 201);
+
+        }catch (\Exception $exception){
+            return ResponseHelper::jsonResponse(false, $exception->getMessage(), null, 500);
+        }
     }
 }

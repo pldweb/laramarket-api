@@ -6,6 +6,7 @@ use App\Interfaces\BuyerRepositoryInterface;
 use App\Interfaces\ProductRepositoryInterface;
 use App\Models\Buyer;
 use App\Models\Product;
+use App\Models\ProductImage;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -72,6 +73,17 @@ class ProductRepository implements ProductRepositoryInterface
 
             $product->save();
 
+            $productImage = new ProductImageRepository;
+            if (isset($data['product_images'])) {
+                foreach ($data['product_images'] as $image) {
+                    $productImage->create([
+                        'product_id' => $product->id,
+                        'image' => $image['image'],
+                        'is_thumbnail' => $image['is_thumbnail'],
+                    ]);
+                }
+            }
+
             DB::commit();
             return $product;
         } catch (\Exception $exception){
@@ -85,26 +97,35 @@ class ProductRepository implements ProductRepositoryInterface
         DB::beginTransaction();
         try {
             $product = Product::find($id);
-
-            if (isset($data['parent_id'])) {
-                $product->parent_id = $data['parent_id'];
-            }
-
-            if (isset($data['image'])) {
-                $product->image = $data['image']->store('assets/product-category', 'public');
-            }
-
-            if (isset($data['tagline'])) {
-                $product->tagline = $data['tagline'];
-            }
-
+            $product->store_id = $data['store_id'];
+            $product->product_category_id = $data['product_category_id'];
             $product->name = $data['name'];
-
-            if (isset($data['slug'])) {
-                $product->slug = Str::slug($data['name']);
-            }
+            $product->slug = Str::slug($data['name']) . '-i' . rand(10000, 99999) . '.' . rand(10000000, 99999999);
             $product->description = $data['description'];
+            $product->condition = $data['condition'];
+            $product->price = $data['price'];
+            $product->weight = $data['weight'];
+            $product->stock = $data['stock'];
+
             $product->save();
+
+            $productImage = new ProductImageRepository;
+            if (isset($data['delete_product_images'])) {
+                foreach ($data['delete_product_images'] as $image) {
+                    $productImage->delete($image);
+                }
+            }
+            if (isset($data['product_images'])) {
+                foreach ($data['product_images'] as $image) {
+                    if(!isset($productImage['id'])){
+                        $productImage->create([
+                            'product_id' => $product->id,
+                            'image' => $image['image'],
+                            'is_thumbnail' => $image['is_thumbnail'],
+                        ]);
+                    }
+                }
+            }
 
             DB::commit();
             return $product;
