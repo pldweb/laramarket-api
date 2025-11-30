@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Helper\ImageHelpers\ImageHelper;
 use App\Models\ProductCategory;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
@@ -15,7 +14,7 @@ class ProductCategorySeeder extends Seeder
      */
     public function run(): void
     {
-        $categories =  [
+        $categories = [
             [
                 'name' => 'Elektronik',
                 'tagline' => 'Temukan berbagai produk elektronik terbaik',
@@ -36,7 +35,7 @@ class ProductCategorySeeder extends Seeder
                         'tagline' => 'Lengkapi gadget Anda dengan aksesoris terbaik',
                         'description' => 'Berbagai aksesoris untuk smartphone dan laptop',
                     ],
-                ]
+                ],
             ],
             [
                 'name' => 'Fashion',
@@ -53,7 +52,7 @@ class ProductCategorySeeder extends Seeder
                         'tagline' => 'Koleksi pakaian wanita terkini',
                         'description' => 'Koleksi pakaian wanita',
                     ],
-                ]
+                ],
             ],
             [
                 'name' => 'Kesehatan & kecantikan',
@@ -70,8 +69,8 @@ class ProductCategorySeeder extends Seeder
                         'tagline' => 'Suplemen kesehatan berkualitas',
                         'description' => 'Berbagai suplemen untuk menjaga kesehatan tubuh',
                     ],
-                ]
-            ]
+                ],
+            ],
         ];
 
         $imageHelper = new ImageHelper;
@@ -107,7 +106,6 @@ class ProductCategorySeeder extends Seeder
                 ]);
             }
         }
-
 
     }
 }

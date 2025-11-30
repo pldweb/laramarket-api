@@ -19,6 +19,7 @@ class StoreUpdateRequest extends FormRequest
             'postal_code' => 'string|required',
         ];
     }
+
     public function attributes(): array
     {
         return [

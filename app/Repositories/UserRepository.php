@@ -2,12 +2,10 @@
 
 namespace App\Repositories;
 
-use App\Helper\ResponseHelper;
 use App\Interfaces\UserRepositoryInterface;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\DB;
-use function PHPUnit\Framework\throwException;
 
 class UserRepository implements UserRepositoryInterface
 {
@@ -19,11 +17,11 @@ class UserRepository implements UserRepositoryInterface
             }
         });
 
-        if($limit){
+        if ($limit) {
             $query->take($limit);
         }
 
-        if($execute){
+        if ($execute) {
             return $query->get();
         }
 
@@ -33,12 +31,14 @@ class UserRepository implements UserRepositoryInterface
     public function getAllPaginated(?string $search, ?int $rowPerPage)
     {
         $query = $this->getAll($search, null, false);
+
         return $query->paginate($rowPerPage);
     }
 
     public function getById(string $id)
     {
         $query = User::find($id);
+
         return $query;
     }
 
@@ -52,8 +52,9 @@ class UserRepository implements UserRepositoryInterface
             $user->password = bcrypt($data['password']);
             $user->save();
             DB::commit();
+
             return $user;
-        } catch (\Exception $exception){
+        } catch (\Exception $exception) {
             DB::rollBack();
             throw new Exception($exception->getMessage());
         }
@@ -66,18 +67,19 @@ class UserRepository implements UserRepositoryInterface
             $user = User::find($id);
             $user->name = $data['name'];
 
-            if(isset($data['password'])){
+            if (isset($data['password'])) {
                 $user->password = bcrypt($data['password']);
             }
 
-            if(isset($data['email'])){
+            if (isset($data['email'])) {
                 $user->email = $data['email'];
             }
 
             $user->save();
             DB::commit();
+
             return $user;
-        } catch (\Exception $exception){
+        } catch (\Exception $exception) {
             DB::rollBack();
             throw new Exception($exception->getMessage());
         }
@@ -90,11 +92,11 @@ class UserRepository implements UserRepositoryInterface
             $user = User::find($id);
             $user->delete();
             DB::commit();
+
             return $user;
-        }catch (Exception $exception){
+        } catch (Exception $exception) {
             DB::rollBack();
             throw new Exception($exception->getMessage());
         }
     }
-
 }

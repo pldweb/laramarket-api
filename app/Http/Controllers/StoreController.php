@@ -7,13 +7,11 @@ use App\Http\Requests\StoreStoreRequest;
 use App\Http\Requests\StoreUpdateRequest;
 use App\Http\Resources\PaginateResource;
 use App\Http\Resources\StoreResource;
-use App\Http\Resources\UserResource;
 use App\Interfaces\StoreRepositoryInterface;
 use Illuminate\Http\Request;
 
 class StoreController extends Controller
 {
-
     private StoreRepositoryInterface $storeRepository;
 
     public function __construct(StoreRepositoryInterface $storeRepository)
@@ -47,6 +45,7 @@ class StoreController extends Controller
 
         try {
             $stores = $this->storeRepository->getAllPaginated($request['search'] ?? null, $request['is_verified'] ?? null, $request['row_per_page']);
+
             return ResponseHelper::jsonResponse(true, 'Data toko berhasil ditemukan', PaginateResource::make($stores, StoreResource::class), 200);
 
         } catch (\Exception $exception) {
@@ -54,28 +53,28 @@ class StoreController extends Controller
         }
     }
 
-
     public function store(StoreStoreRequest $request)
     {
         $request = $request->validated();
         try {
             $user = $this->storeRepository->create($request);
+
             return ResponseHelper::jsonResponse(true, 'Data toko berhasil disimpan', new StoreResource($user), 201);
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return ResponseHelper::jsonResponse(false, $exception->getMessage(), null, 500);
         }
 
     }
-
 
     public function show(string $id)
     {
         try {
             $store = $this->storeRepository->getById($id);
 
-            if (!$store) {
+            if (! $store) {
                 return ResponseHelper::jsonResponse(false, 'Data toko gagal ditemukan', null, 404);
             }
+
             return ResponseHelper::jsonResponse(true, 'Data toko berhasil ditemukan', new StoreResource($store), 200);
 
         } catch (\Exception $exception) {
@@ -83,17 +82,17 @@ class StoreController extends Controller
         }
     }
 
-
     public function updateVerifiedStatus(string $id)
     {
         try {
             $store = $this->storeRepository->getById($id);
 
-            if (!$store) {
+            if (! $store) {
                 return ResponseHelper::jsonResponse(false, 'Data toko gagal ditemukan', null, 404);
             }
 
             $store = $this->storeRepository->updateVerifiedStatus($id, true);
+
             return ResponseHelper::jsonResponse(true, 'Data toko berhasil diverifikasi', new StoreResource($store), 200);
 
         } catch (\Exception $exception) {
@@ -101,13 +100,12 @@ class StoreController extends Controller
         }
     }
 
-
     public function update(StoreUpdateRequest $request, string $id)
     {
         try {
             $store = $this->storeRepository->getById($id);
 
-            if (!$store) {
+            if (! $store) {
                 return ResponseHelper::jsonResponse(false, 'Data toko gagal ditemukan', null, 404);
             }
 
@@ -121,18 +119,18 @@ class StoreController extends Controller
         }
     }
 
-
     public function destroy(string $id)
     {
         try {
             $store = $this->storeRepository->getById($id);
-            if (!$store) {
+            if (! $store) {
                 return ResponseHelper::jsonResponse(false, 'Data toko tidak ditemukan', null, 404);
             }
             $store->delete();
+
             return ResponseHelper::jsonResponse(true, 'Data toko berhasil dihapus', null, 201);
 
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return ResponseHelper::jsonResponse(false, $exception->getMessage(), null, 500);
         }
     }

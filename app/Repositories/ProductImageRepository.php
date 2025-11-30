@@ -2,17 +2,11 @@
 
 namespace App\Repositories;
 
-use App\Interfaces\BuyerRepositoryInterface;
 use App\Interfaces\ProductImageRepositoryInterface;
-use App\Interfaces\ProductRepositoryInterface;
-use App\Models\Buyer;
-use App\Models\Product;
 use App\Models\ProductImage;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
-use function PHPUnit\Framework\throwException;
 
 class ProductImageRepository implements ProductImageRepositoryInterface
 {
@@ -28,8 +22,9 @@ class ProductImageRepository implements ProductImageRepositoryInterface
             $productImage->save();
 
             DB::commit();
+
             return $productImage;
-        }catch (Exception $exception){
+        } catch (Exception $exception) {
             DB::rollBack();
             throw new Exception($exception->getMessage());
         }
@@ -44,8 +39,9 @@ class ProductImageRepository implements ProductImageRepositoryInterface
             Storage::disk('public')->delete($productImage->image);
             $productImage->delete();
             DB::commit();
+
             return $productImage;
-        }catch (Exception $exception){
+        } catch (Exception $exception) {
             DB::rollBack();
             throw new Exception($exception->getMessage());
         }

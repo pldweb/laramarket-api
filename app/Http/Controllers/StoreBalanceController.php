@@ -5,13 +5,11 @@ namespace App\Http\Controllers;
 use App\Helper\ResponseHelper;
 use App\Http\Resources\PaginateResource;
 use App\Http\Resources\StoreBalanceResource;
-use App\Http\Resources\UserResource;
 use App\Interfaces\StoreBalanceRepositoryInterface;
 use Illuminate\Http\Request;
 
 class StoreBalanceController extends Controller
 {
-
     private StoreBalanceRepositoryInterface $storeBalanceRepository;
 
     public function __construct(StoreBalanceRepositoryInterface $storeBalanceRepository)
@@ -43,6 +41,7 @@ class StoreBalanceController extends Controller
 
         try {
             $users = $this->storeBalanceRepository->getAllPaginated($request['search'] ?? null, $request['row_per_page']);
+
             return ResponseHelper::jsonResponse(true, 'Data dompet toko berhasil ditemukan', PaginateResource::make($users, StoreBalanceResource::class), 200);
 
         } catch (\Exception $exception) {
@@ -55,9 +54,10 @@ class StoreBalanceController extends Controller
         try {
             $storeBalance = $this->storeBalanceRepository->getById($id);
 
-            if (!$storeBalance) {
+            if (! $storeBalance) {
                 return ResponseHelper::jsonResponse(false, 'Data dompet toko gagal ditemukan', null, 404);
             }
+
             return ResponseHelper::jsonResponse(true, 'Data dompet toko berhasil ditemukan', new StoreBalanceResource($storeBalance), 200);
 
         } catch (\Exception $exception) {

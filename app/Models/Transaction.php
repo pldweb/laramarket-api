@@ -57,5 +57,4 @@ class Transaction extends Model
     {
         return $this->hasMany(ProductReview::class);
     }
-
 }

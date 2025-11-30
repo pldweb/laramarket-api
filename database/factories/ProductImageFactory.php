@@ -32,7 +32,7 @@ class ProductImageFactory extends Factory
 
     public function thumbnail(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'is_thumbnail' => true,
         ]);
     }

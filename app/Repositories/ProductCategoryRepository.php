@@ -2,56 +2,56 @@
 
 namespace App\Repositories;
 
-use App\Interfaces\BuyerRepositoryInterface;
 use App\Interfaces\ProductCategoryRepositoryInterface;
-use App\Models\Buyer;
 use App\Models\ProductCategory;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use function PHPUnit\Framework\throwException;
 
 class ProductCategoryRepository implements ProductCategoryRepositoryInterface
 {
-    public function getAll(?string $search, ?bool $isParent = null, ?int $limit, bool $execute)
+    public function getAll(?string $search, ?bool $isParent, ?int $limit, bool $execute)
     {
         $query = ProductCategory::where(function ($query) use ($search, $isParent) {
             if ($search) {
                 $query->search($search);
             }
 
-            if($isParent === true){
+            if ($isParent === true) {
                 $query->whereNull('parent_id');
             }
 
         });
 
-        if($limit){
+        if ($limit) {
             $query->take($limit);
         }
 
-        if($execute){
+        if ($execute) {
             return $query->get();
         }
 
         return $query;
     }
 
-    public function getAllPaginated(?string $search, ?bool $isParent = null, ?int $rowPerPage)
+    public function getAllPaginated(?string $search, ?bool $isParent, ?int $rowPerPage)
     {
         $query = $this->getAll($search, $isParent, null, false);
+
         return $query->paginate($rowPerPage);
     }
 
     public function getById(string $id)
     {
         $query = ProductCategory::where('id', $id)->with('childerns');
+
         return $query->first();
     }
 
     public function getBySlug(string $slug)
     {
         $query = ProductCategory::where('slug', $slug)->with('childerns');
+
         return $query->first();
     }
 
@@ -78,8 +78,9 @@ class ProductCategoryRepository implements ProductCategoryRepositoryInterface
             $productCategory->save();
 
             DB::commit();
+
             return $productCategory;
-        } catch (\Exception $exception){
+        } catch (\Exception $exception) {
             DB::rollBack();
             throw new Exception($exception->getMessage());
         }
@@ -112,8 +113,9 @@ class ProductCategoryRepository implements ProductCategoryRepositoryInterface
             $productCategory->save();
 
             DB::commit();
+
             return $productCategory;
-        } catch (\Exception $exception){
+        } catch (\Exception $exception) {
             DB::rollBack();
             throw new Exception($exception->getMessage());
         }
@@ -124,13 +126,14 @@ class ProductCategoryRepository implements ProductCategoryRepositoryInterface
         DB::beginTransaction();
         try {
             $productCategory = ProductCategory::find($id);
-            if(!$productCategory){
+            if (! $productCategory) {
                 throw new Exception('Kategori produk not found');
             }
             $productCategory->delete();
             DB::commit();
+
             return $productCategory;
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             DB::rollBack();
             throw new Exception($exception->getMessage());
         }

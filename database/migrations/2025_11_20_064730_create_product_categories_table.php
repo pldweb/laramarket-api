@@ -16,7 +16,7 @@ return new class extends Migration
             $table->uuid('parent_id')->nullable();
             $table->foreign('parent_id')->references('id')->on('product_categories')->onDelete('cascade');
             $table->string('image')->nullable();
-            $table->string('name')->nullable(); //Elektronik Rumah
+            $table->string('name')->nullable(); // Elektronik Rumah
             $table->string('slug')->unique()->nullable(); // elektronik-rumah
             $table->string('tagline')->nullable();
             $table->string('description')->nullable();

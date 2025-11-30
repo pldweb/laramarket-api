@@ -2,16 +2,10 @@
 
 namespace App\Repositories;
 
-use App\Helper\ResponseHelper;
 use App\Interfaces\StoreBalanceHistoryRepositoryInterface;
-use App\Interfaces\StoreBalanceRepositoryInterface;
-use App\Interfaces\UserRepositoryInterface;
-use App\Models\StoreBalance;
 use App\Models\StoreBalanceHistory;
-use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\DB;
-use function PHPUnit\Framework\throwException;
 
 class StoreBalanceHistoryRepository implements StoreBalanceHistoryRepositoryInterface
 {
@@ -23,11 +17,11 @@ class StoreBalanceHistoryRepository implements StoreBalanceHistoryRepositoryInte
             }
         });
 
-        if($limit){
+        if ($limit) {
             $query->take($limit);
         }
 
-        if($execute){
+        if ($execute) {
             return $query->get();
         }
 
@@ -37,12 +31,14 @@ class StoreBalanceHistoryRepository implements StoreBalanceHistoryRepositoryInte
     public function getAllPaginated(?string $search, ?int $rowPerPage)
     {
         $query = $this->getAll($search, null, false);
+
         return $query->paginate($rowPerPage);
     }
 
     public function getById(string $id)
     {
         $query = StoreBalanceHistory::where('id', $id);
+
         return $query->first();
     }
 
@@ -59,8 +55,9 @@ class StoreBalanceHistoryRepository implements StoreBalanceHistoryRepositoryInte
             $storeBalanceHistory->remarks = $data['remarks'];
             $storeBalanceHistory->save();
             DB::commit();
+
             return $storeBalanceHistory;
-        } catch (\Exception $exception){
+        } catch (\Exception $exception) {
             DB::rollBack();
             throw new Exception($exception->getMessage());
         }
@@ -78,13 +75,11 @@ class StoreBalanceHistoryRepository implements StoreBalanceHistoryRepositoryInte
             $storeBalanceHistory->remarks = $data['remarks'];
             $storeBalanceHistory->save();
             DB::commit();
+
             return $storeBalanceHistory;
-        } catch (\Exception $exception){
+        } catch (\Exception $exception) {
             DB::rollBack();
             throw new Exception($exception->getMessage());
         }
     }
-
-
-
 }

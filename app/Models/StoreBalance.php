@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class StoreBalance extends Model
 {
-    use UUID, HasFactory;
+    use HasFactory, UUID;
 
     protected $fillable = ['store_id', 'balance'];
 
@@ -17,7 +17,7 @@ class StoreBalance extends Model
     public function scopeSearch($query, $search)
     {
         $query = $query->whereHas('store', function ($q) use ($search) {
-            $q->where('name', 'like', '%' . $search . '%');
+            $q->where('name', 'like', '%'.$search.'%');
         });
 
         return $query;

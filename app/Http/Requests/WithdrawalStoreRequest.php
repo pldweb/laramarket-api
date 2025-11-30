@@ -6,7 +6,6 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class WithdrawalStoreRequest extends FormRequest
 {
-
     public function rules(): array
     {
         return [

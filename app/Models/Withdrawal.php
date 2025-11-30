@@ -2,14 +2,13 @@
 
 namespace App\Models;
 
-use App\Traits\UUID;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Withdrawal extends Model
 {
-    use HasUuids, HasFactory;
+    use HasFactory, HasUuids;
 
     protected $fillable = [
         'user_id',
@@ -20,13 +19,13 @@ class Withdrawal extends Model
         'bank_account_number',
         'bank_name',
         'status',
-        'proof'
+        'proof',
     ];
 
     public function scopeSearch($query, $search)
     {
         return $query->whereHas('storeBalance.store', function ($query) use ($search) {
-            $query->where('name', 'like', '%' . $search . '%');
+            $query->where('name', 'like', '%'.$search.'%');
         });
     }
 

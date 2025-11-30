@@ -12,12 +12,12 @@ class ProductCategoryResource extends JsonResource
         return [
             'id' => $this->id,
             'parent' => new ProductCategoryResource($this->parent),
-            'image' => asset('storage/' . $this->image),
+            'image' => asset('storage/'.$this->image),
             'name' => $this->name,
             'slug' => $this->slug,
             'tagline' => $this->tagline,
             'description' => $this->description,
-            'childerns' => ProductCategoryResource::collection($this->whenLoaded('childerns'))
+            'childerns' => ProductCategoryResource::collection($this->whenLoaded('childerns')),
         ];
     }
 }

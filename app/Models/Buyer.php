@@ -2,14 +2,13 @@
 
 namespace App\Models;
 
-use App\Traits\UUID;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Buyer extends Model
 {
-    use HasUuids, HasFactory;
+    use HasFactory, HasUuids;
 
     protected $fillable = [
         'user_id',
@@ -20,7 +19,7 @@ class Buyer extends Model
     public function scopeSearch($query, $search)
     {
         $query = $query->whereHas('store', function ($q) use ($search) {
-            $q->where('name', 'like', '%' . $search . '%');
+            $q->where('name', 'like', '%'.$search.'%');
         });
 
         return $query;
@@ -35,6 +34,4 @@ class Buyer extends Model
     {
         return $this->hasMany(Transaction::class);
     }
-
-
 }

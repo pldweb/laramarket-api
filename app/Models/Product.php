@@ -2,14 +2,13 @@
 
 namespace App\Models;
 
-use App\Traits\UUID;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    use HasUuids, HasFactory;
+    use HasFactory, HasUuids;
 
     protected $fillable = [
         'store_id',
@@ -26,12 +25,13 @@ class Product extends Model
     protected $casts = [
         'price' => 'decimal:2',
         'weight' => 'decimal:2',
-        ];
+    ];
 
     public function scopeSearch($query, $search)
     {
-        return $query->where('name', 'like', '%' . $search . '%');
+        return $query->where('name', 'like', '%'.$search.'%');
     }
+
     public function store()
     {
         return $this->belongsTo(Store::class);
@@ -42,15 +42,15 @@ class Product extends Model
         return $this->hasOne(StoreBalance::class);
     }
 
-   public function products()
-   {
-       return $this->hasMany(Product::class);
-   }
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
 
-   public function productImages()
-   {
-       return $this->hasMany(ProductImage::class);
-   }
+    public function productImages()
+    {
+        return $this->hasMany(ProductImage::class);
+    }
 
     public function transactionDetails()
     {
@@ -61,6 +61,4 @@ class Product extends Model
     {
         return $this->hasMany(ProductReview::class);
     }
-
-
 }

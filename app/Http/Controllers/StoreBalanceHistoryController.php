@@ -5,9 +5,7 @@ namespace App\Http\Controllers;
 use App\Helper\ResponseHelper;
 use App\Http\Resources\PaginateResource;
 use App\Http\Resources\StoreBalanceHistoryResource;
-use App\Http\Resources\UserResource;
 use App\Interfaces\StoreBalanceHistoryRepositoryInterface;
-use App\Interfaces\UserRepositoryInterface;
 use Illuminate\Http\Request;
 
 class StoreBalanceHistoryController extends Controller
@@ -43,6 +41,7 @@ class StoreBalanceHistoryController extends Controller
 
         try {
             $storeBalanceHistory = $this->storeBalanceHistoryRepository->getAllPaginated($request['search'] ?? null, $request['row_per_page']);
+
             return ResponseHelper::jsonResponse(true, 'Data riwayat dompet toko berhasil ditemukan', PaginateResource::make($storeBalanceHistory, StoreBalanceHistoryResource::class), 200);
 
         } catch (\Exception $exception) {
@@ -60,7 +59,7 @@ class StoreBalanceHistoryController extends Controller
 
             return responseHelper::jsonResponse(true, 'Data riwayat dompet toko berhasil ditemukan', null, 200);
 
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return ResponseHelper::jsonResponse(false, $exception->getMessage(), null, 500);
         }
     }

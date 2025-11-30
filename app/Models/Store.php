@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Store extends Model
 {
-    use UUID, HasFactory;
+    use HasFactory, UUID;
 
     protected $fillable = [
         'user_id',

@@ -13,5 +13,4 @@ interface StoreBalanceRepositoryInterface
     public function credit(string $id, string $amount);
 
     public function debit(string $id, string $amount);
-
 }

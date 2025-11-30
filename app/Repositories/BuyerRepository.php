@@ -2,18 +2,10 @@
 
 namespace App\Repositories;
 
-use App\Helper\ResponseHelper;
 use App\Interfaces\BuyerRepositoryInterface;
-use App\Interfaces\StoreBalanceHistoryRepositoryInterface;
-use App\Interfaces\StoreBalanceRepositoryInterface;
-use App\Interfaces\UserRepositoryInterface;
 use App\Models\Buyer;
-use App\Models\StoreBalance;
-use App\Models\StoreBalanceHistory;
-use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\DB;
-use function PHPUnit\Framework\throwException;
 
 class BuyerRepository implements BuyerRepositoryInterface
 {
@@ -25,11 +17,11 @@ class BuyerRepository implements BuyerRepositoryInterface
             }
         });
 
-        if($limit){
+        if ($limit) {
             $query->take($limit);
         }
 
-        if($execute){
+        if ($execute) {
             return $query->get();
         }
 
@@ -39,12 +31,14 @@ class BuyerRepository implements BuyerRepositoryInterface
     public function getAllPaginated(?string $search, ?int $rowPerPage)
     {
         $query = $this->getAll($search, null, false);
+
         return $query->paginate($rowPerPage);
     }
 
     public function getById(string $id)
     {
         $query = Buyer::where('id', $id);
+
         return $query->first();
     }
 
@@ -58,8 +52,9 @@ class BuyerRepository implements BuyerRepositoryInterface
             $buyer->phone_number = $data['phone_number'];
             $buyer->save();
             DB::commit();
+
             return $buyer;
-        } catch (\Exception $exception){
+        } catch (\Exception $exception) {
             DB::rollBack();
             throw new Exception($exception->getMessage());
         }
@@ -76,8 +71,9 @@ class BuyerRepository implements BuyerRepositoryInterface
             $buyer->phone_number = $data['phone_number'];
             $buyer->save();
             DB::commit();
+
             return $buyer;
-        } catch (\Exception $exception){
+        } catch (\Exception $exception) {
             DB::rollBack();
             throw new Exception($exception->getMessage());
         }
@@ -88,13 +84,14 @@ class BuyerRepository implements BuyerRepositoryInterface
         DB::beginTransaction();
         try {
             $buyer = Buyer::find($id);
-            if(!$buyer){
+            if (! $buyer) {
                 throw new Exception('Buyer not found');
             }
             $buyer->delete();
             DB::commit();
+
             return $buyer;
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             DB::rollBack();
             throw new Exception($exception->getMessage());
         }

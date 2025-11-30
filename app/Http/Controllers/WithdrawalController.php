@@ -6,11 +6,9 @@ use App\Helper\ResponseHelper;
 use App\Http\Requests\WithdrawalApproveRequest;
 use App\Http\Requests\WithdrawalStoreRequest;
 use App\Http\Resources\PaginateResource;
-use App\Http\Resources\UserResource;
 use App\Http\Resources\WithdrawalResource;
 use App\Repositories\WithdrawalRepository;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class WithdrawalController extends Controller
 {
@@ -45,6 +43,7 @@ class WithdrawalController extends Controller
 
         try {
             $withdrawal = $this->withdrawalRepository->getAllPaginated($request['search'] ?? null, $request['row_per_page']);
+
             return ResponseHelper::jsonResponse(true, 'Data withdrawal berhasil ditemukan', PaginateResource::make($withdrawal, WithdrawalResource::class), 200);
 
         } catch (\Exception $exception) {
@@ -52,28 +51,28 @@ class WithdrawalController extends Controller
         }
     }
 
-
     public function store(WithdrawalStoreRequest $request)
     {
         $request = $request->validated();
         try {
             $withdrawal = $this->withdrawalRepository->create($request);
+
             return ResponseHelper::jsonResponse(true, 'Data withdrawal berhasil ditambahkan', new WithdrawalResource($withdrawal), 200);
 
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return ResponseHelper::jsonResponse(false, $exception->getMessage(), null, 500);
         }
     }
-
 
     public function show(string $id)
     {
         try {
             $withdrawal = $this->withdrawalRepository->getById($id);
 
-            if (!$withdrawal) {
+            if (! $withdrawal) {
                 return ResponseHelper::jsonResponse(false, 'Data withdrawal gagal ditemukan', null, 404);
             }
+
             return ResponseHelper::jsonResponse(true, 'Data withdrawal berhasil ditemukan', new WithdrawalResource($withdrawal), 200);
 
         } catch (\Exception $exception) {
@@ -81,23 +80,22 @@ class WithdrawalController extends Controller
         }
     }
 
-
     public function approve(WithdrawalApproveRequest $request, string $id)
     {
         $request = $request->validated();
         try {
             $withdrawal = $this->withdrawalRepository->getById($id);
 
-            if (!$withdrawal) {
+            if (! $withdrawal) {
                 return ResponseHelper::jsonResponse(false, 'Data withdrawal gagal ditemukan', null, 404);
             }
 
             $withdrawal = $this->withdrawalRepository->approve($id, $request['proof']);
+
             return ResponseHelper::jsonResponse(true, 'Data withdrawal berhasil ditemukan', new WithdrawalResource($withdrawal), 200);
 
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return ResponseHelper::jsonResponse(false, $exception->getMessage(), null, 500);
         }
     }
-
 }

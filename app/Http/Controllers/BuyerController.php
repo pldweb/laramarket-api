@@ -13,7 +13,6 @@ use Illuminate\Http\Request;
 
 class BuyerController extends Controller
 {
-
     private BuyerRepositoryInterface $buyerRepository;
 
     public function __construct(BuyerRepositoryInterface $buyerRepository)
@@ -45,6 +44,7 @@ class BuyerController extends Controller
 
         try {
             $buyer = $this->buyerRepository->getAllPaginated($request['search'] ?? null, $request['row_per_page']);
+
             return ResponseHelper::jsonResponse(true, 'Data buyer berhasil ditemukan', PaginateResource::make($buyer, BuyerResource::class), 200);
 
         } catch (\Exception $exception) {
@@ -52,12 +52,12 @@ class BuyerController extends Controller
         }
     }
 
-
     public function store(BuyerStoreRequest $request)
     {
         $request = $request->validated();
         try {
             $buyer = $this->buyerRepository->create($request);
+
             return ResponseHelper::jsonResponse(true, 'Data buyer berhasil ditambahkan', new BuyerResource($buyer), 200);
 
         } catch (\Exception $exception) {
@@ -70,9 +70,10 @@ class BuyerController extends Controller
         try {
             $user = $this->buyerRepository->getById($id);
 
-            if (!$user) {
+            if (! $user) {
                 return ResponseHelper::jsonResponse(false, 'Data buyer gagal ditemukan', null, 404);
             }
+
             return ResponseHelper::jsonResponse(true, 'Data buyer berhasil ditemukan', new BuyerResource($user), 200);
 
         } catch (\Exception $exception) {
@@ -80,13 +81,12 @@ class BuyerController extends Controller
         }
     }
 
-
     public function update(BuyerUpdateRequest $request, string $id)
     {
         $request = $request->validated();
         try {
             $buyer = $this->buyerRepository->getById($id);
-            if (!$buyer) {
+            if (! $buyer) {
                 return ResponseHelper::jsonResponse(false, 'Data buyer gagal ditemukan', null, 404);
             }
 
@@ -103,14 +103,15 @@ class BuyerController extends Controller
     {
         try {
             $buyer = $this->buyerRepository->getById($id);
-            if (!$buyer) {
+            if (! $buyer) {
                 return ResponseHelper::jsonResponse(false, 'Data buyer gagal ditemukan', null, 404);
             }
 
             $user = $this->buyerRepository->delete($id);
+
             return ResponseHelper::jsonResponse(true, 'Data user berhasil dihapus', new UserResource($user), 201);
 
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return ResponseHelper::jsonResponse(false, $exception->getMessage(), null, 500);
         }
     }

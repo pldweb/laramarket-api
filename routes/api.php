@@ -4,7 +4,6 @@ use App\Http\Controllers\StoreBalanceController;
 use App\Http\Controllers\StoreBalanceHistoryController;
 use App\Http\Controllers\StoreController;
 use App\Http\Controllers\UserController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::apiResource('user', UserController::class);

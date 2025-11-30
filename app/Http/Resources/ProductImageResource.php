@@ -7,14 +7,13 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class ProductImageResource extends JsonResource
 {
-
     public function toArray(Request $request): array
     {
         return [
             'id' => $this->id,
             'product' => new ProductResource($this->product),
-            'image' => asset('storage/' . $this->image),
-            'is_thumbnail' => $this->is_thumbnail
+            'image' => asset('storage/'.$this->image),
+            'is_thumbnail' => $this->is_thumbnail,
         ];
     }
 }

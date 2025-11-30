@@ -10,7 +10,6 @@ use App\Http\Resources\UserResource;
 use App\Interfaces\UserRepositoryInterface;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\PaginatedResourceResponse;
 
 class UserController extends Controller
 {
@@ -45,6 +44,7 @@ class UserController extends Controller
 
         try {
             $users = $this->userRepository->getAllPaginated($request['search'] ?? null, $request['row_per_page']);
+
             return ResponseHelper::jsonResponse(true, 'Data user berhasil ditemukan', PaginateResource::make($users, UserResource::class), 200);
 
         } catch (\Exception $exception) {
@@ -57,21 +57,22 @@ class UserController extends Controller
         $request = $request->validated();
         try {
             $user = $this->userRepository->create($request);
+
             return ResponseHelper::jsonResponse(true, 'Data user berhasil disimpan', new UserResource($user), 201);
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return ResponseHelper::jsonResponse(false, $exception->getMessage(), null, 500);
         }
     }
-
 
     public function show(string $id)
     {
         try {
             $user = $this->userRepository->getById($id);
 
-            if (!$user) {
+            if (! $user) {
                 return ResponseHelper::jsonResponse(false, 'Data user gagal ditemukan', null, 404);
             }
+
             return ResponseHelper::jsonResponse(true, 'Data user berhasil ditemukan', new UserResource($user), 200);
 
         } catch (\Exception $exception) {
@@ -79,36 +80,35 @@ class UserController extends Controller
         }
     }
 
-
     public function update(UserUpdateRequest $request, string $id)
     {
         $request = $request->validated();
         try {
             $user = User::find($id);
-            if (!$user) {
+            if (! $user) {
                 return ResponseHelper::jsonResponse(false, 'Data user gagal ditemukan', null, 404);
             }
             $user = $this->userRepository->update($id, $request);
 
             return ResponseHelper::jsonResponse(true, 'Data user berhasil diupdate', new UserResource($user), 201);
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return ResponseHelper::jsonResponse(false, $exception->getMessage(), null, 500);
         }
     }
-
 
     public function destroy(string $id)
     {
         try {
             $user = $this->userRepository->getById($id);
-            if (!$user) {
+            if (! $user) {
                 return ResponseHelper::jsonResponse(false, 'Data user gagal ditemukan', null, 404);
             }
 
             $user = $this->userRepository->delete($id);
+
             return ResponseHelper::jsonResponse(true, 'Data user berhasil dihapus', new UserResource($user), 201);
 
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return ResponseHelper::jsonResponse(false, $exception->getMessage(), null, 500);
         }
     }

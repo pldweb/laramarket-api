@@ -31,12 +31,12 @@ class ProductStoreRequest extends FormRequest
             'product_category_id' => [
                 'required',
                 'exists:product_categories,id',
-                function($attribute, $value, $fail){
+                function ($attribute, $value, $fail) {
                     $category = ProductCategory::find($value);
-                    if($category && $category->parent_id === null){
+                    if ($category && $category->parent_id === null) {
                         $fail('Kategori produk tidak memiliki kategori induk');
                     }
-                }
+                },
             ],
             'name' => 'Nama',
             'description' => 'Deskripsi',

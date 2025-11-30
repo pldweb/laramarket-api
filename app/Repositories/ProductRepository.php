@@ -2,15 +2,11 @@
 
 namespace App\Repositories;
 
-use App\Interfaces\BuyerRepositoryInterface;
 use App\Interfaces\ProductRepositoryInterface;
-use App\Models\Buyer;
 use App\Models\Product;
-use App\Models\ProductImage;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use function PHPUnit\Framework\throwException;
 
 class ProductRepository implements ProductRepositoryInterface
 {
@@ -21,17 +17,17 @@ class ProductRepository implements ProductRepositoryInterface
                 $query->search($search);
             }
 
-            if($productCategoryId){
+            if ($productCategoryId) {
                 $query->where('product_category_id', $productCategoryId);
             }
 
         })->with('productImages');
 
-        if($limit){
+        if ($limit) {
             $query->take($limit);
         }
 
-        if($execute){
+        if ($execute) {
             return $query->get();
         }
 
@@ -41,18 +37,21 @@ class ProductRepository implements ProductRepositoryInterface
     public function getAllPaginated(?string $search, ?string $productCategoryId, ?int $rowPerPage)
     {
         $query = $this->getAll($search, $productCategoryId, null, false);
+
         return $query->paginate($rowPerPage);
     }
 
     public function getById(string $id)
     {
         $query = Product::where('id', $id)->with('productImages');
+
         return $query->first();
     }
 
     public function getBySlug(string $slug)
     {
         $query = Product::where('slug', $slug)->with('productImages');
+
         return $query->first();
     }
 
@@ -64,7 +63,7 @@ class ProductRepository implements ProductRepositoryInterface
             $product->store_id = $data['store_id'];
             $product->product_category_id = $data['product_category_id'];
             $product->name = $data['name'];
-            $product->slug = Str::slug($data['name']) . '-i' . rand(10000, 99999) . '.' . rand(10000000, 99999999);
+            $product->slug = Str::slug($data['name']).'-i'.rand(10000, 99999).'.'.rand(10000000, 99999999);
             $product->description = $data['description'];
             $product->condition = $data['condition'];
             $product->price = $data['price'];
@@ -85,8 +84,9 @@ class ProductRepository implements ProductRepositoryInterface
             }
 
             DB::commit();
+
             return $product;
-        } catch (\Exception $exception){
+        } catch (\Exception $exception) {
             DB::rollBack();
             throw new Exception($exception->getMessage());
         }
@@ -100,7 +100,7 @@ class ProductRepository implements ProductRepositoryInterface
             $product->store_id = $data['store_id'];
             $product->product_category_id = $data['product_category_id'];
             $product->name = $data['name'];
-            $product->slug = Str::slug($data['name']) . '-i' . rand(10000, 99999) . '.' . rand(10000000, 99999999);
+            $product->slug = Str::slug($data['name']).'-i'.rand(10000, 99999).'.'.rand(10000000, 99999999);
             $product->description = $data['description'];
             $product->condition = $data['condition'];
             $product->price = $data['price'];
@@ -117,7 +117,7 @@ class ProductRepository implements ProductRepositoryInterface
             }
             if (isset($data['product_images'])) {
                 foreach ($data['product_images'] as $image) {
-                    if(!isset($productImage['id'])){
+                    if (! isset($productImage['id'])) {
                         $productImage->create([
                             'product_id' => $product->id,
                             'image' => $image['image'],
@@ -128,8 +128,9 @@ class ProductRepository implements ProductRepositoryInterface
             }
 
             DB::commit();
+
             return $product;
-        } catch (\Exception $exception){
+        } catch (\Exception $exception) {
             DB::rollBack();
             throw new Exception($exception->getMessage());
         }
@@ -140,13 +141,14 @@ class ProductRepository implements ProductRepositoryInterface
         DB::beginTransaction();
         try {
             $product = Product::find($id);
-            if(!$product){
+            if (! $product) {
                 throw new Exception('Kategori produk not found');
             }
             $product->delete();
             DB::commit();
+
             return $product;
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             DB::rollBack();
             throw new Exception($exception->getMessage());
         }

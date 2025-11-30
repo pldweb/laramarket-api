@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class WithdrawalFactory extends Factory
 {
-
     protected $model = Withdrawal::class;
 
     public function definition(): array
@@ -20,12 +19,13 @@ class WithdrawalFactory extends Factory
             'store_balance_id' => StoreBalance::factory(),
             'amount' => function (array $attributes) {
                 $storeBalance = StoreBalance::find($attributes['store_balance_id']);
+
                 return $this->faker->randomFloat(2, 0, $storeBalance->balance);
             },
             'bank_account_name' => $this->faker->name,
             'bank_account_number' => $this->faker->numerify('###########'),
             'bank_name' => $this->faker->randomElement(['BCA', 'Mandiri', 'BRI', 'BNI']),
-            'status' => 'pending'
+            'status' => 'pending',
         ];
     }
 
@@ -39,7 +39,7 @@ class WithdrawalFactory extends Factory
                 'reference_id' => $withdrawal->id,
                 'reference_type' => Withdrawal::class,
                 'amount' => $withdrawal->amount,
-                'remarks' => "Permintaan penarikan dana ke {$withdrawal->bank_name} - {$withdrawal->bank_account_number}"
+                'remarks' => "Permintaan penarikan dana ke {$withdrawal->bank_name} - {$withdrawal->bank_account_number}",
             ]);
 
             // penarikan dana
@@ -48,7 +48,7 @@ class WithdrawalFactory extends Factory
                 'reference_id' => $withdrawal->id,
                 'reference_type' => Withdrawal::class,
                 'amount' => $withdrawal->amount,
-                'remarks' => "Permintaan penarikan dana ke {$withdrawal->bank_name} - {$withdrawal->bank_account_number} telah di proses"
+                'remarks' => "Permintaan penarikan dana ke {$withdrawal->bank_name} - {$withdrawal->bank_account_number} telah di proses",
             ]);
 
             $withdrawal->update(['status' => 'approved']);

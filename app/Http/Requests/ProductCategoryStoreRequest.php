@@ -19,12 +19,12 @@ class ProductCategoryStoreRequest extends FormRequest
 
     public function attributes()
     {
-       return [
-           'parent_id' => 'Kategori Induk',
-           'image' => 'Foto',
-           'name' => 'Nama Kategori',
-           'tagline' => 'Tagline',
-           'description' => 'Deskripsi',
-       ];
+        return [
+            'parent_id' => 'Kategori Induk',
+            'image' => 'Foto',
+            'name' => 'Nama Kategori',
+            'tagline' => 'Tagline',
+            'description' => 'Deskripsi',
+        ];
     }
 }

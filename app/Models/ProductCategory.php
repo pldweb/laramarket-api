@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Traits\UUID;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,12 +15,12 @@ class ProductCategory extends Model
         'slug',
         'description',
         'tagline',
-        'image'
+        'image',
     ];
 
     public function scopeSearch($query, $search)
     {
-       return $query->where('name', 'like', '%' . $search . '%');
+        return $query->where('name', 'like', '%'.$search.'%');
     }
 
     public function parent()
@@ -38,6 +37,4 @@ class ProductCategory extends Model
     {
         return $this->hasMany(Product::class);
     }
-
-
 }

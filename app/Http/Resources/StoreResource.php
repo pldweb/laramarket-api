@@ -7,7 +7,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class StoreResource extends JsonResource
 {
-
     public function toArray(Request $request): array
     {
         return [
@@ -21,7 +20,7 @@ class StoreResource extends JsonResource
             'city' => $this->city,
             'address' => $this->address,
             'postal_code' => $this->postal_code,
-            'is_verified' => $this->is_verified
+            'is_verified' => $this->is_verified,
         ];
     }
 }

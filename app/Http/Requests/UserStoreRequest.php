@@ -6,8 +6,6 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class UserStoreRequest extends FormRequest
 {
-
-
     public function rules(): array
     {
         return [
@@ -26,4 +24,3 @@ class UserStoreRequest extends FormRequest
         ];
     }
 }
-

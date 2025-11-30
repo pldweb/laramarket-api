@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 class BuyerFactory extends Factory
 {
-
     protected $model = Buyer::class;
 
     public function definition(): array

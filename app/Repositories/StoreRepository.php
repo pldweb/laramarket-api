@@ -2,13 +2,10 @@
 
 namespace App\Repositories;
 
-use App\Helper\ResponseHelper;
 use App\Interfaces\StoreRepositoryInterface;
 use App\Models\Store;
-use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\DB;
-use function PHPUnit\Framework\throwException;
 
 class StoreRepository implements StoreRepositoryInterface
 {
@@ -24,11 +21,11 @@ class StoreRepository implements StoreRepositoryInterface
             }
         });
 
-        if($limit){
+        if ($limit) {
             $query->take($limit);
         }
 
-        if($execute){
+        if ($execute) {
             return $query->get();
         }
 
@@ -38,12 +35,14 @@ class StoreRepository implements StoreRepositoryInterface
     public function getAllPaginated(?string $search, ?bool $isVerified, ?int $rowPerPage)
     {
         $query = $this->getAll($search, $isVerified, null, false);
+
         return $query->paginate($rowPerPage);
     }
 
     public function getById(string $id)
     {
         $query = Store::find($id);
+
         return $query;
     }
 
@@ -68,8 +67,9 @@ class StoreRepository implements StoreRepositoryInterface
             ]);
 
             DB::commit();
+
             return $store;
-        } catch (\Exception $exception){
+        } catch (\Exception $exception) {
             DB::rollBack();
             throw new Exception($exception->getMessage());
         }
@@ -85,10 +85,9 @@ class StoreRepository implements StoreRepositoryInterface
             DB::commit();
 
             return $store;
-        }catch (Exception $exception){
+        } catch (Exception $exception) {
             DB::rollBack();
             throw new Exception($exception->getMessage());
-
         }
     }
 
@@ -112,8 +111,9 @@ class StoreRepository implements StoreRepositoryInterface
             $store->save();
 
             DB::commit();
+
             return $store;
-        } catch (\Exception $exception){
+        } catch (\Exception $exception) {
             DB::rollBack();
             throw new Exception($exception->getMessage());
         }

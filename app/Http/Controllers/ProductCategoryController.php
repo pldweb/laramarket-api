@@ -12,7 +12,6 @@ use Illuminate\Http\Request;
 
 class ProductCategoryController extends Controller
 {
-
     private ProductCategoryRepositoryInterface $productCategoryRepository;
 
     public function __construct(ProductCategoryRepositoryInterface $productCategoryRepository)
@@ -46,6 +45,7 @@ class ProductCategoryController extends Controller
 
         try {
             $productCategory = $this->productCategoryRepository->getAllPaginated($request['search'] ?? null, $request['parent_id'] ?? null, $request['row_per_page']);
+
             return ResponseHelper::jsonResponse(true, 'Data kategori produk berhasil ditemukan', PaginateResource::make($productCategory, ProductCategoryResource::class), 200);
 
         } catch (\Exception $exception) {
@@ -53,13 +53,13 @@ class ProductCategoryController extends Controller
         }
     }
 
-
     public function store(ProductCategoryStoreRequest $request)
     {
         $request = $request->validated();
 
         try {
             $productCategory = $this->productCategoryRepository->create($request);
+
             return ResponseHelper::jsonResponse(true, 'Data kategori produk berhasil ditambahkan', PaginateResource::make($productCategory, ProductCategoryResource::class), 200);
 
         } catch (\Exception $exception) {
@@ -68,15 +68,15 @@ class ProductCategoryController extends Controller
 
     }
 
-
     public function show(string $id)
     {
         try {
             $productCategory = $this->productCategoryRepository->getById($id);
 
-            if (!$productCategory) {
+            if (! $productCategory) {
                 return ResponseHelper::jsonResponse(false, 'Data kategori produk gagal ditemukan', null, 404);
             }
+
             return ResponseHelper::jsonResponse(true, 'Data kategori produk berhasil ditemukan', new ProductCategoryResource($productCategory), 200);
 
         } catch (\Exception $exception) {
@@ -89,9 +89,10 @@ class ProductCategoryController extends Controller
         try {
             $productCategory = $this->productCategoryRepository->getBySlug($slug);
 
-            if (!$productCategory) {
+            if (! $productCategory) {
                 return ResponseHelper::jsonResponse(false, 'Data kategori produk gagal ditemukan', null, 404);
             }
+
             return ResponseHelper::jsonResponse(true, 'Data kategori produk berhasil ditemukan', new ProductCategoryResource($productCategory), 200);
 
         } catch (\Exception $exception) {
@@ -99,16 +100,16 @@ class ProductCategoryController extends Controller
         }
     }
 
-
     public function update(ProductCategoryUpdateRequest $request, string $id)
     {
         try {
             $productCategory = $this->productCategoryRepository->getById($id);
 
-            if (!$productCategory) {
+            if (! $productCategory) {
                 return ResponseHelper::jsonResponse(false, 'Data kategori produk gagal ditemukan', null, 404);
             }
             $productCategory = $this->productCategoryRepository->update($id, $productCategory);
+
             return ResponseHelper::jsonResponse(true, 'Data kategori produk berhasil diupdate', new ProductCategoryResource($productCategory), 200);
 
         } catch (\Exception $exception) {
@@ -116,19 +117,19 @@ class ProductCategoryController extends Controller
         }
     }
 
-
     public function destroy(string $id)
     {
         try {
             $productCategory = $this->productCategoryRepository->getById($id);
-            if (!$productCategory) {
+            if (! $productCategory) {
                 return ResponseHelper::jsonResponse(false, 'Data kategori gagal ditemukan', null, 404);
             }
 
             $productCategory = $this->productCategoryRepository->delete($id);
+
             return ResponseHelper::jsonResponse(true, 'Data kategori berhasil dihapus', new ProductCategoryResource($productCategory), 201);
 
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return ResponseHelper::jsonResponse(false, $exception->getMessage(), null, 500);
         }
     }

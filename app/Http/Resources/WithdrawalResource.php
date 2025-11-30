@@ -7,7 +7,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class WithdrawalResource extends JsonResource
 {
-
     public function toArray(Request $request): array
     {
         return [
@@ -17,7 +16,7 @@ class WithdrawalResource extends JsonResource
             'bank_account_name' => $this->bank_account_name,
             'bank_account_number' => $this->bank_acount_number,
             'bank_name' => $this->bank_name,
-            'status' => $this->status
+            'status' => $this->status,
         ];
     }
 }

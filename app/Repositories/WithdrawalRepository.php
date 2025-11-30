@@ -2,17 +2,11 @@
 
 namespace App\Repositories;
 
-use App\Helper\ResponseHelper;
 use App\Interfaces\WithdrawalRepositoryInterface;
-use App\Interfaces\StoreBalanceRepositoryInterface;
-use App\Interfaces\UserRepositoryInterface;
-use App\Models\StoreBalance;
 use App\Models\Withdrawal;
-use App\Models\User;
 use Exception;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
-use function PHPUnit\Framework\throwException;
 
 class WithdrawalRepository implements WithdrawalRepositoryInterface
 {
@@ -24,11 +18,11 @@ class WithdrawalRepository implements WithdrawalRepositoryInterface
             }
         });
 
-        if($limit){
+        if ($limit) {
             $query->take($limit);
         }
 
-        if($execute){
+        if ($execute) {
             return $query->get();
         }
 
@@ -38,15 +32,16 @@ class WithdrawalRepository implements WithdrawalRepositoryInterface
     public function getAllPaginated(?string $search, ?int $rowPerPage)
     {
         $query = $this->getAll($search, null, false);
+
         return $query->paginate($rowPerPage);
     }
 
     public function getById(string $id)
     {
         $query = Withdrawal::where('id', $id);
+
         return $query->first();
     }
-
 
     public function create(array $data)
     {
@@ -73,8 +68,9 @@ class WithdrawalRepository implements WithdrawalRepositoryInterface
                 'remarks' => "Permintaan penarikan dana ke {$withdrawal->bank_name} - {$withdrawal->bank_account_number}",
             ]);
             DB::commit();
+
             return $withdrawal;
-        } catch (\Exception $exception){
+        } catch (\Exception $exception) {
             DB::rollBack();
             throw new Exception($exception->getMessage());
         }
@@ -99,11 +95,11 @@ class WithdrawalRepository implements WithdrawalRepositoryInterface
                 'remarks' => "Permintaan penarikan dana ke {$withdrawal->bank_name} - {$withdrawal->bank_account_number} disetujui",
             ]);
             DB::commit();
+
             return $withdrawal;
-        } catch (\Exception $exception){
+        } catch (\Exception $exception) {
             DB::rollBack();
             throw new Exception($exception->getMessage());
         }
     }
-
 }

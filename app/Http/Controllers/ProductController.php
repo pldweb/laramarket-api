@@ -6,10 +6,8 @@ use App\Helper\ResponseHelper;
 use App\Http\Requests\ProductStoreRequest;
 use App\Http\Requests\ProductUpdateRequest;
 use App\Http\Resources\PaginateResource;
-use App\Http\Resources\ProductCategoryResource;
 use App\Http\Resources\ProductResource;
 use App\Interfaces\ProductRepositoryInterface;
-use App\Repositories\ProductRepository;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -47,12 +45,12 @@ class ProductController extends Controller
 
         try {
             $product = $this->productRepository->getAllPaginated($request['search'] ?? null, $request['parent_id'] ?? null, $request['row_per_page']);
+
             return ResponseHelper::jsonResponse(true, 'Data produk berhasil ditemukan', PaginateResource::make($product, ProductResource::class), 200);
         } catch (\Exception $exception) {
             return ResponseHelper::jsonResponse(false, $exception->getMessage(), null, 500);
         }
     }
-
 
     public function store(ProductStoreRequest $request)
     {
@@ -60,9 +58,10 @@ class ProductController extends Controller
 
         try {
             $product = $this->productRepository->create($request);
+
             return ResponseHelper::jsonResponse(true, 'Data produk berhasil ditambahkan', new ProductResource($product), 201);
 
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return ResponseHelper::jsonResponse(false, $exception->getMessage(), null, 500);
         }
     }
@@ -72,9 +71,10 @@ class ProductController extends Controller
         try {
             $product = $this->productRepository->getById($id);
 
-            if (!$product) {
+            if (! $product) {
                 return ResponseHelper::jsonResponse(false, 'Data produk gagal ditemukan', null, 404);
             }
+
             return ResponseHelper::jsonResponse(true, 'Data produk berhasil ditemukan', new ProductResource($product), 200);
 
         } catch (\Exception $exception) {
@@ -87,9 +87,10 @@ class ProductController extends Controller
         try {
             $product = $this->productRepository->getBySlug($slug);
 
-            if (!$product) {
+            if (! $product) {
                 return ResponseHelper::jsonResponse(false, 'Data produk gagal ditemukan', null, 404);
             }
+
             return ResponseHelper::jsonResponse(true, 'Data produk berhasil ditemukan', new ProductResource($product), 200);
 
         } catch (\Exception $exception) {
@@ -97,18 +98,18 @@ class ProductController extends Controller
         }
     }
 
-
     public function update(ProductUpdateRequest $request, string $id)
     {
         $data = $request->validated();
         try {
             $product = $this->productRepository->getById($id);
 
-            if (!$product) {
+            if (! $product) {
                 return ResponseHelper::jsonResponse(false, 'Data produk gagal ditemukan', null, 404);
             }
 
             $product = $this->productRepository->update($id, $data);
+
             return ResponseHelper::jsonResponse(true, 'Data produk berhasil diupdate', new ProductResource($product), 200);
 
         } catch (\Exception $exception) {
@@ -123,14 +124,15 @@ class ProductController extends Controller
     {
         try {
             $product = $this->productRepository->getById($id);
-            if (!$product) {
+            if (! $product) {
                 return ResponseHelper::jsonResponse(false, 'Data produk gagal ditemukan', null, 404);
             }
 
             $product = $this->productRepository->delete($id);
+
             return ResponseHelper::jsonResponse(true, 'Data produk berhasil dihapus', new ProductResource($product), 201);
 
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return ResponseHelper::jsonResponse(false, $exception->getMessage(), null, 500);
         }
     }
