@@ -36,4 +36,4 @@ Route::get('product/slug/{slug}', [\App\Http\Controllers\ProductController::clas
 
 Route::apiResource('transaction', \App\Http\Controllers\TransactionController::class);
 Route::get('transaction/all/paginated', [\App\Http\Controllers\TransactionController::class, 'getAllPaginated']);
-Route::apiResource('transaction/code/{code}', \App\Http\Controllers\TransactionController::class, 'showByCode');
+Route::get('transaction/code/{code}', [\App\Http\Controllers\TransactionController::class, 'showByCode']);
