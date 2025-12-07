@@ -82,6 +82,22 @@ class StoreController extends Controller
         }
     }
 
+    public function showBySlug(string $slug)
+    {
+        try {
+            $store = $this->storeRepository->getBySlug($slug);
+
+            if (! $store) {
+                return ResponseHelper::jsonResponse(false, 'Data toko gagal ditemukan', null, 404);
+            }
+
+            return ResponseHelper::jsonResponse(true, 'Data toko berhasil ditemukan', new StoreResource($store), 200);
+
+        } catch (\Exception $exception) {
+            return ResponseHelper::jsonResponse(false, $exception->getMessage(), null, 500);
+        }
+    }
+
     public function updateVerifiedStatus(string $id)
     {
         try {

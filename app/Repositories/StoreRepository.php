@@ -19,7 +19,7 @@ class StoreRepository implements StoreRepositoryInterface
             if ($isVerified !== null) {
                 $query->where('is_verified', $isVerified);
             }
-        });
+        })->with(['user', 'storeBalance']);
 
         if ($limit) {
             $query->take($limit);
@@ -41,7 +41,14 @@ class StoreRepository implements StoreRepositoryInterface
 
     public function getById(string $id)
     {
-        $query = Store::find($id);
+        $query = Store::with(['user', 'storeBalance'])->find($id);
+
+        return $query;
+    }
+
+    public function getBySlug(string $slug)
+    {
+        $query = Store::with(['user', 'storeBalance'])->where('slug', $slug)->first();
 
         return $query;
     }

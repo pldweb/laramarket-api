@@ -15,11 +15,13 @@ class StoreFactory extends Factory
     {
 
         $imageHelper = new ImageHelper;
+        $name = $this->faker->company();
 
         return [
             'id' => $this->faker->uuid(),
             'user_id' => User::factory(),
-            'name' => $this->faker->name(),
+            'name' => $name,
+            'slug' => \Illuminate\Support\Str::slug($name).'-'.\Illuminate\Support\Str::random(5),
             'logo' => $imageHelper->storeAndResizeImage(
                 $imageHelper->createDummyImageWithTextSizeAndPosition(250, 250, 'center', 'center', 'random', 'medium'),
                 'store',

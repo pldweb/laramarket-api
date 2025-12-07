@@ -42,6 +42,11 @@ class Product extends Model
         return $this->hasOne(StoreBalance::class);
     }
 
+    public function productCategory()
+    {
+        return $this->belongsTo(ProductCategory::class);
+    }
+
     public function products()
     {
         return $this->hasMany(Product::class);

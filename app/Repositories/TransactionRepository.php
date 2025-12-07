@@ -21,7 +21,7 @@ class TransactionRepository implements TransactionRepositoryInterface
                 $query->search($search);
             }
 
-        });
+        })->with(['buyer', 'store', 'transactionDetails.product.productImages']);
 
         if ($limit) {
             $query->take($limit);
@@ -43,14 +43,14 @@ class TransactionRepository implements TransactionRepositoryInterface
 
     public function getById(string $id)
     {
-        $query = Transaction::where('id', $id);
+        $query = Transaction::where('id', $id)->with(['buyer', 'store', 'transactionDetails.product.productImages']);
 
         return $query->first();
     }
 
     public function getByCode(string $code)
     {
-        $query = Transaction::where('code', $code);
+        $query = Transaction::where('code', $code)->with(['buyer', 'store', 'transactionDetails.product.productImages']);
 
         return $query->first();
     }
@@ -96,7 +96,7 @@ class TransactionRepository implements TransactionRepositoryInterface
     {
         DB::beginTransaction();
         try {
-            $transaction = new ProductCategory;
+            $transaction = new Transaction;
 
             $transaction->code = 'BLUE'.str_pad(mt_rand(1, 9999), 5, '0', STR_PAD_LEFT);
             $transaction->buyer_id = $data['buyer_id'];

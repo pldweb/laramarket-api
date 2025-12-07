@@ -26,7 +26,8 @@ class ProductController extends Controller
                 $request->search,
                 $request->is_parent,
                 $request->limit,
-                true
+                true,
+                $request->boolean('random')
             );
 
             return ResponseHelper::jsonResponse(true, 'Data produk berhasil ditemukan', ProductResource::collection($product), 200);

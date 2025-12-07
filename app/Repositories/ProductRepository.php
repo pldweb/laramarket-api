@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 
 class ProductRepository implements ProductRepositoryInterface
 {
-    public function getAll(?string $search, ?string $productCategoryId, ?int $limit, bool $execute)
+    public function getAll(?string $search, ?string $productCategoryId, ?int $limit, bool $execute, bool $random = false)
     {
         $query = Product::where(function ($query) use ($search, $productCategoryId) {
             if ($search) {
@@ -21,7 +21,11 @@ class ProductRepository implements ProductRepositoryInterface
                 $query->where('product_category_id', $productCategoryId);
             }
 
-        })->with('productImages');
+        })->with(['productImages', 'store', 'productCategory']);
+
+        if ($random) {
+            $query->inRandomOrder();
+        }
 
         if ($limit) {
             $query->take($limit);
@@ -43,14 +47,14 @@ class ProductRepository implements ProductRepositoryInterface
 
     public function getById(string $id)
     {
-        $query = Product::where('id', $id)->with(['productImages', 'productReviews']);
+        $query = Product::where('id', $id)->with(['productImages', 'productReviews', 'store', 'productCategory']);
 
         return $query->first();
     }
 
     public function getBySlug(string $slug)
     {
-        $query = Product::where('slug', $slug)->with('productImages');
+        $query = Product::where('slug', $slug)->with(['productImages', 'store', 'productCategory']);
 
         return $query->first();
     }
